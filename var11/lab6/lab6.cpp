@@ -8,16 +8,16 @@
 7.	+Выполнить обработку этого массива.
 8.	+Распечатать полученный массив.
 
-4	struct employee
+struct person
 {
 char*name;
-float salary;
-int stage
-};
+int age;
+}
 
-+Сотрудники со стажем больше 10 лет
 
-+Удалить  строку из конца матрицы
++Возраст меньше 18
+
++Удалить строку с номером К
 
 */
 
@@ -26,61 +26,66 @@ int stage
 #include <iostream>
 #include <ctime>
 #include <stdio.h>
+#include <string.h>
 
 using namespace std;
 
-struct Employee {
+/** Структура */
+struct Person {
     char name[50];
-    float salary;
-    int stage;
+    int age;
 };
 
-Employee* formedStructure(int n) {
-         cout<<">>Formed array structure type\n";
+/** Формирование массива структур */
+Person* formedListStructure(int n) {
+         cout<<">>Formed array structure type"<<endl;
 
          srand(time(0));
-         Employee* eList = new Employee[n];
+         Person* personList = new Person[n];
          for(int i=0;i<n;i++) {
-             sprintf(eList[i].name, "Name%d", i);
-             eList[i].salary = 10000 + rand() % 10000;
-             eList[i].stage = rand() % 20;
+             sprintf(personList[i].name, "Name%d", i);
+             personList[i].age = rand() % 30;
          }
 
-         return eList;
+         return personList;
 }
 
-void printEmployee(Employee e) {
-     cout<<"name: "<<e.name<<"; salary: "<<e.salary<<"; stage="<<e.stage<<"\n";
+/** Печать структуры */
+void printPerson(Person e) {
+     cout<<"name: "<<e.name<<"; age="<<e.age<<endl;
 }
 
-void printStructure(Employee* eList, int n) {
-     cout<<">>Print array structure\n";
+/** Печать списка структур */
+void printListStructure(Person* personList, int n) {
+     cout<<">>Print array structure"<<endl;
 
      if (n == 0) {
            cout<<"Array is empty!";
      }
 
      for(int i=0;i<n;i++) {
-          printEmployee(eList[i]);
+          printPerson(personList[i]);
      }
 }
 
-void findEmployee(Employee* e, int n, int stage) {
-     cout<<">>Find employee where stage > "<<stage<<"\n";
+/** Поиск людей у которых возраст < 18 лет */
+void findPerson(Person* e, int n, int age) {
+     cout<<">>Find person where age < "<<age<<""<<endl;
 
      if (n == 0) {
            cout<<"Array is empty!";
      }
 
      for(int i=0;i<n;i++) {
-             if (e[i].stage > 10) {
-                printEmployee(e[i]);
+             if (e[i].age < age) {
+                printPerson(e[i]);
              }
      }
 }
 
+/** Формирование динамического массива, динамических строк */
 char** formedDynArrayDynStrings(int n) {
-       cout<<">>Formed dyn array dyn strings\n";
+       cout<<">>Formed dyn array dyn strings"<<endl;
 
        char** array = new char*[n];
        for(int i=0;i<n;i++) {
@@ -91,59 +96,85 @@ char** formedDynArrayDynStrings(int n) {
        return array;
 }
 
+/** Печать динамического массива, динамических строк */
 void printDynArrayDynStrings(char** array, int n) {
-     cout<<">>Print dyn array dyn strings\n";
+     cout<<">>Print dyn array dyn strings"<<endl;
 
      if (n == 0) {
            cout<<"Array is empty!";
      }
 
      for(int i=0;i<n;i++) {
-             cout<<i+1<<": "<<array[i]<<"\n";
+             cout<<i+1<<": "<<array[i]<<endl;
      }
 }
 
-char** processingDynArrayDynString(char** array, int* n) {
-       cout<<">>Processing dyn array dyn strings\n";
+/** Удаление строки с заданным номером из динамического массива строк */
+char** deleteRowById(char** array, int* n, int id) {
+       cout<<">>Delete row by id"<<endl;
 
-       if (*n > 0) {
-          *n -= 1;
-          delete array[*n];
-       } else {
-              cout<<"Array is empty!";
+       if (n == 0) {
+           cout<<"Array is empty!";
        }
 
+       char** a = new char*[20];
+       int curRow = 0;
+
+       for (int i=0; i<*n; i++) {
+           if (i != id) {
+               a[curRow] = new char[20];
+               strcpy(a[curRow], array[i]);
+               curRow++;
+           }
+       }
+
+       *n = curRow;
        return array;
 }
 
 int main(int argc, char *argv[]) {
     int k;
-    int n = 0;
-    const int stage = 10;
-    Employee* eList;
+    int nStructure = 0, nDynArray = 0;
+    const int age = 18;
+    Person* personList;
     char** array;
 
     do {
-        cout<<"\n=======================\n";
-        cout<<"1. Formed array structure type\n";
-        cout<<"2. Print array structure\n";
-        cout<<"3. Find employtt where stage > "<<stage<<"\n";
-        cout<<"4. Formed dyn array dyn strings\n";
-        cout<<"5. Print dyn array dyn strings\n";
-        cout<<"6. Processing dyn array dyn strings\n";
-        cout<<"7. Exit\n";
-        cout<<"=======================\n";
+        cout<<endl<<"======================="<<endl;
+        cout<<"1. Formed array structure type"<<endl;
+        cout<<"2. Print array structure"<<endl;
+        cout<<"3. Find person where age < "<<age<<endl;
+        cout<<"4. Formed dyn array dyn strings"<<endl;
+        cout<<"5. Print dyn array dyn strings"<<endl;
+        cout<<"6. Delete string from dyn array dyn strings"<<endl;
+        cout<<"7. Exit"<<endl;
+        cout<<"======================="<<endl;
         cin>>k;
         switch (k) {
-            case 1:
-                n = 10;
-                eList = formedStructure(n);
+            case 1: //Формирование списка структур
+                nStructure = 10;
+                personList = formedListStructure(nStructure);
                 break;
-            case 2: printStructure(eList, n); break;
-            case 3: findEmployee(eList, n, stage); break;//
-            case 4: n = 10; array = formedDynArrayDynStrings(n); break;//
-            case 5: printDynArrayDynStrings(array, n); break;//
-            case 6: array = processingDynArrayDynString(array, &n); break;//
+            case 2: //Распечатка списка структур
+                printListStructure(personList, nStructure);
+                break;
+            case 3: //Поиск в списке структур людей с возрастом менее 18 лет
+                findPerson(personList, nStructure, age);
+                break;
+            case 4: //Формирование динамического массива, динамических строк
+                nDynArray = 10;
+                array = formedDynArrayDynStrings(nDynArray);
+                break;
+            case 5: //Печать динамического массива, динамических строк
+                printDynArrayDynStrings(array, nDynArray);
+                break;
+            case 6: //Удаление строки с заданным номером из динамического массива строк
+                int k;
+                cout<<"Enter k: ";
+                cin>>k;
+// TODO (sdoronin#1#): Почему то удаляется последний элемент
+                array = deleteRowById(array, &nDynArray, k-1);
+                break;
         }
     } while (k!=7);//выход
 }
