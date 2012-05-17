@@ -133,6 +133,7 @@ char** deleteRowById(char** array, int* n, int id) {
        return a;
 }
 
+/** Главная запускаемая функция */
 int main(int argc, char *argv[]) {
     int k;
     int nStructure = 0, nDynArray = 0;
@@ -173,7 +174,6 @@ int main(int argc, char *argv[]) {
                 int k;
                 cout<<"Enter k: ";
                 cin>>k;
-// TODO (sdoronin#1#): Почему то удаляется последний элемент
                 array = deleteRowById(array, &nDynArray, k-1);
                 break;
         }
