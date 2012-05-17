@@ -113,8 +113,9 @@ void printDynArrayDynStrings(char** array, int n) {
 char** deleteRowById(char** array, int* n, int id) {
        cout<<">>Delete row by id"<<endl;
 
-       if (n == 0) {
+       if (*n == 0) {
            cout<<"Array is empty!";
+           return array;
        }
 
        char** a = new char*[20];
@@ -129,7 +130,7 @@ char** deleteRowById(char** array, int* n, int id) {
        }
 
        *n = curRow;
-       return array;
+       return a;
 }
 
 int main(int argc, char *argv[]) {
