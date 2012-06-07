@@ -1,29 +1,33 @@
 #include <iostream>
 #include <math.h>
+#include "n2.h"
 
+using namespace std;
+
+/**
+* Лаба 1: Задание 2
+* Записать выражение, зависящее от координат точки X и Y и принимающее значение TRUE, если точка принадлежит заштрихованной области, и FALSE, если не принадлежит.
+*/
 int n2(){
 	/** Точки ввода */
 	float x,y;
-	/** Радиус */
-	int r=1;
 
-	std::cout<<"\nEnter x,y\n";
-	std::cin>>x>>y;
+	/** Две точки треугольника */
+	int x1 = -7, y1 = 0;
+	int x2 = 0, y2 = -1;
 
-	bool ok = ((x>=-1 && x<=1 && y>=-1 && y<=1) && (x*x+y*y<=r*r));
+	cout<<endl<<"Enter x,y"<<endl;
+	cin>>x>>y;
+
+
+	bool ok = (x<=x2 && x>=x1 && y<=y1 && y>=y2) && ((y - y1) / (y2 - y1) <= (x - x1) / (x2 - x1));
 	if (ok){
-		std::cout<<"Tocka popadaet!\n";
+		cout<<"Tocka popadaet!"<<endl;
 	}else{
-		std::cout<<"Tocka Ne popadaet.\n";
+		cout<<"Tocka Ne popadaet."<<endl;
 	}
-	//std::cin>>r;
 }
 
 /*
-x2+y2+ax+by+c=0
-C=2PiR=PiD;
-R=C/(2Pi)=D/2
-D=C/Pi=2R
-
-x2+y2=R2
+Уравнение прямой: (y - y1)/(y2 - y1) = (x - x1)/(x2 - x1)
 */
