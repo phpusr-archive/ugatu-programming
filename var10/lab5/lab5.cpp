@@ -1,10 +1,11 @@
-//var4
-//(Одномерный массив)Добавить элемент в начало массива
-//(Двумерный массив)Удалить строку с номером К
+//var10
+//(Одномерный массив)Удалить все элементы с нечетными индексами
+//(Двумерный массив)Добавить К столбцов в начало матрицы
 
 #include <cstdlib>
 #include <iostream>
 #include <ctime>
+#include <math.h>
 
 using namespace std;
 
@@ -14,89 +15,93 @@ void input_mas(int* mas, int size);
 void input_mas_x2(int** mas, int str, int stl);
 void print_mas(int* mas, int size);
 void print_mas_x2(int** mas, int str, int stl);
+int* deleteEl(int* mas, int* size);
+int** addStl(int** mas, int str, int* stl, int k);
+
+/** Программа запускается отсюда */
+int main(int argc, char *argv[]) {
+
+    cout << "Var 10 Lab 5" << endl;
+
+    int k;
+    int* mas;
+    int** mas2;
+    const int SIZE = 10;
+    int size=0, str=0, stl=0;
+    do {
+        cout<<endl<<"======================="<<endl;
+        cout<<"1. Udelenie elementov"<<endl;
+        cout<<"2. Print array"<<endl;
+        cout<<"6. Exit"<<endl;
+        cout<<"======================="<<endl;
+        cin>>k;
+        switch (k) {
+            case 1: //Выделение памяти и заполнение массива, удаление всех элементов с нечетными индексами
+                size = SIZE;
+                mas = form_mas(size);
+                input_mas(mas,size);
+                print_mas(mas, size);
+
+                deleteEl(mas, &size);
+                print_mas(mas, size);
+
+                break;
+            case 2: //Выделение памяти и заполнение массива, добавление К столбцов в начало матрицы
+                int k;
+                cout<<"Enter k: ";
+                cin>>k;
+
+                str = SIZE; stl = SIZE;
+                mas2 = form_mas_x2(str, stl + k);
+                input_mas_x2(mas2, str, stl);
+                print_mas_x2(mas2, str, stl);
 
 
-/** Добавление элемента в начало массива */
-int* addToBegin(int* mas, int* size, int el) {
-    cout<<">>Add to begin\n";
+                mas2 = addStl(mas2, str, &stl, k);
+                print_mas_x2(mas2, str, stl);
+                break;
+        }
+    } while (k!=6);//выход
 
-    *size += 1;
-    int* a = new int[*size];
-    a[0] = el;
+}
 
-    for(int i=1; i<*size; i++) {
-        a[i] = mas[i-1];
+/** Удалить все элементы с нечетными индексами */
+int* deleteEl(int* mas, int* size) {
+    cout<<">>Udalenit nechetnih elementov"<<endl;
+
+    int count = round((float)*size / 2);
+
+    for(int i=0; i<count; i++) {
+        mas[i] = mas[i*2+1];
     }
 
-    return a;
+    *size = count;
+    return mas;
 }
 
 /** Удаление строки по ее номеру в двумерном массиве */
-int** deleteRowById(int** mas, int* str, int stl, int id) {
+int** addStl(int** mas, int str, int* stl, int k) {
+    cout<<">>Dobavlenie K stolbcov v nachalo matrix"<<endl;
+
     if (str == 0 || stl == 0) {
         cout<<">>Array is empty!"<<endl;
         return mas;
     }
 
-    int** a = new int*[*str];
-    int curRow = 0;
+    *stl += k;
 
-    for(int i=0; i<*str; i++) {
-        if (i != id) {
-            a[curRow] = new int[stl];
-            for(int j=0; j<stl; j++) {
-                a[curRow][j] = mas[i][j];
-            }
-            curRow++;
+    for(int i=0; i<str; i++) {
+
+        for(int j=*stl-1; j>=0; j--) {
+            mas[i][j] = mas[i][j-k];
+        }
+
+        for(int j=0; j<k; j++) {
+            mas[i][j] = j+1;
         }
     }
 
-    *str = curRow;
-    return a;
-}
-
-/** Программа запускается отсюда */
-int main(int argc, char *argv[]) {
-    int k;
-    int* mas;
-    int** mas2;
-    int SIZE = 10;
-    int size=0, str=0, stl=0;
-    do {
-        cout<<endl<<"======================="<<endl;
-        cout<<"1. Formed arrays"<<endl;
-        cout<<"2. Print array"<<endl;
-        cout<<"3. Print array x2"<<endl;
-        cout<<"4. Add element to begin array"<<endl;
-        cout<<"5. Delete row from array"<<endl;
-        cout<<"6. Exit"<<endl;
-        cout<<"======================="<<endl;
-        cin>>k;
-        switch (k) {
-            case 1://выделение памяти и заполнение одномерного и двумерного массивов
-                size = SIZE;
-                mas = form_mas(size);
-                input_mas(mas,size);
-
-                str = SIZE; stl = size;
-                mas2 = form_mas_x2(str, stl);
-                input_mas_x2(mas2, str, stl);
-                break;
-            case 2: print_mas(mas, size); break;//печать одномерного массива
-            case 3: print_mas_x2(mas2, str, stl); break;//печать двумерного массива
-            case 4://Добавление элемента в начало одномерного массива
-                mas = addToBegin(mas, &size, 777);
-                print_mas(mas, size);
-                break;
-            case 5://Удаление строки под номером К в двумерном массиве
-                int k;
-                cout<<"Enter k: ";
-                cin>>k;
-                mas2 = deleteRowById(mas2, &str, stl, k-1);
-                break;
-        }
-    } while (k!=6);//выход
-
+    return mas;
 }
 
 /** Формирование одномерного массива */
@@ -134,7 +139,7 @@ void input_mas_x2(int** mas, int str, int stl) {
     srand(time(0));
     for(int i=0;i<str;i++) {
         for (int j=0;j<stl;j++){
-            mas[i][j] = rand()%100;
+            mas[i][j] = rand() % 100;
         }
     }
 }
@@ -146,6 +151,7 @@ void print_mas(int* mas, int size) {
     for (int i=0;i<size;i++) {
         cout<<mas[i]<<", ";
     }
+    cout<<endl;
 }
 
 /** Распечатка двумерного массива */
