@@ -12,12 +12,13 @@ struct person
 {
 char*name;
 int age;
+float rating
 }
 
 
-+Возраст меньше 18
++Ученики, у которых фамилия “Иванов”
 
-+Удалить строку с номером К
++Удалить К строк из начала массива
 
 */
 
@@ -34,6 +35,7 @@ using namespace std;
 struct Person {
     char name[50];
     int age;
+    float rating;
 };
 
 /** Формирование массива структур */
@@ -43,8 +45,13 @@ Person* formedListStructure(int n) {
          srand(time(0));
          Person* personList = new Person[n];
          for(int i=0;i<n;i++) {
-             sprintf(personList[i].name, "Name%d", i);
+             if (rand() % 3 == 0) {
+                 strcpy(personList[i].name, "Ivanov");
+             } else {
+                sprintf(personList[i].name, "Name%d", i);
+             }
              personList[i].age = rand() % 30;
+             personList[i].rating = (float)(rand() % 100) / 100;
          }
 
          return personList;
@@ -52,7 +59,7 @@ Person* formedListStructure(int n) {
 
 /** Печать структуры */
 void printPerson(Person e) {
-     cout<<"name: "<<e.name<<"; age="<<e.age<<endl;
+     cout<<"name: "<<e.name<<"; age="<<e.age<<";\traiting="<<e.rating<<endl;
 }
 
 /** Печать списка структур */
@@ -60,7 +67,7 @@ void printListStructure(Person* personList, int n) {
      cout<<">>Print array structure"<<endl;
 
      if (n == 0) {
-           cout<<"Array is empty!";
+           cout<<"Array is empty!"<<endl;
      }
 
      for(int i=0;i<n;i++) {
@@ -68,16 +75,16 @@ void printListStructure(Person* personList, int n) {
      }
 }
 
-/** Поиск людей у которых возраст < 18 лет */
-void findPerson(Person* e, int n, int age) {
-     cout<<">>Find person where age < "<<age<<""<<endl;
+/** Поиск учеников у которых фамилия “Ivanov” */
+void findPerson(Person* e, int n) {
+     cout<<">>Poisk uchenikov s fam Ivanov"<<endl;
 
      if (n == 0) {
-           cout<<"Array is empty!";
+           cout<<"Array is empty!"<<endl;
      }
 
      for(int i=0;i<n;i++) {
-             if (e[i].age < age) {
+             if (strcmp(e[i].name, "Ivanov") == 0) {
                 printPerson(e[i]);
              }
      }
@@ -109,32 +116,32 @@ void printDynArrayDynStrings(char** array, int n) {
      }
 }
 
-/** Удаление строки с заданным номером из динамического массива строк */
-char** deleteRowById(char** array, int* n, int id) {
-       cout<<">>Delete row by id"<<endl;
+/** Удаление K строк из начала массива */
+char** deleteRows(char** array, int* n, int k) {
+       cout<<">>Udalenie strok iz nachala massiva"<<endl;
 
        if (*n == 0) {
-           cout<<"Array is empty!";
+           cout<<"Array is empty!"<<endl;
+           return array;
+       }
+       if (k > *n) {
+           cout<<"K > N"<<endl;
            return array;
        }
 
-       char** a = new char*[20];
-       int curRow = 0;
-
-       for (int i=0; i<*n; i++) {
-           if (i != id) {
-               a[curRow] = new char[20];
-               strcpy(a[curRow], array[i]);
-               curRow++;
-           }
+       for (int i=0; i<*n-k; i++) {
+           strcpy(array[i], array[i+k]);
        }
 
-       *n = curRow;
-       return a;
+       *n -= k;
+       return array;
 }
 
 /** Главная запускаемая функция */
 int main(int argc, char *argv[]) {
+
+    cout << "Var 10 Lab 6" << endl;
+
     int k;
     int nStructure = 0, nDynArray = 0;
     const int age = 18;
@@ -143,12 +150,12 @@ int main(int argc, char *argv[]) {
 
     do {
         cout<<endl<<"======================="<<endl;
-        cout<<"1. Formed array structure type"<<endl;
-        cout<<"2. Print array structure"<<endl;
-        cout<<"3. Find person where age < "<<age<<endl;
-        cout<<"4. Formed dyn array dyn strings"<<endl;
-        cout<<"5. Print dyn array dyn strings"<<endl;
-        cout<<"6. Delete string from dyn array dyn strings"<<endl;
+        cout<<"1. Formirovanit massiva struktur"<<endl;
+        cout<<"2. Vivod massiva struktur"<<endl;
+        cout<<"3. Poisk Ivanovih"<<endl;
+        cout<<"4. Formirovanit dinamich massiva strok"<<endl;
+        cout<<"5. Vivod dinamich massiva strok"<<endl;
+        cout<<"6. Udalenie strok iz nachala massiva"<<endl;
         cout<<"7. Exit"<<endl;
         cout<<"======================="<<endl;
         cin>>k;
@@ -156,25 +163,28 @@ int main(int argc, char *argv[]) {
             case 1: //Формирование списка структур
                 nStructure = 10;
                 personList = formedListStructure(nStructure);
+                printListStructure(personList, nStructure);
                 break;
             case 2: //Распечатка списка структур
                 printListStructure(personList, nStructure);
                 break;
-            case 3: //Поиск в списке структур людей с возрастом менее 18 лет
-                findPerson(personList, nStructure, age);
+            case 3: //Поиск учеников у которых фамилия “Ivanov”
+                findPerson(personList, nStructure);
                 break;
             case 4: //Формирование динамического массива, динамических строк
                 nDynArray = 10;
                 array = formedDynArrayDynStrings(nDynArray);
+                printDynArrayDynStrings(array, nDynArray);
                 break;
             case 5: //Печать динамического массива, динамических строк
                 printDynArrayDynStrings(array, nDynArray);
                 break;
-            case 6: //Удаление строки с заданным номером из динамического массива строк
+            case 6: //Удаление K строк из начала массива
                 int k;
                 cout<<"Enter k: ";
                 cin>>k;
-                array = deleteRowById(array, &nDynArray, k-1);
+                deleteRows(array, &nDynArray, k);
+                printDynArrayDynStrings(array, nDynArray);
                 break;
         }
     } while (k!=7);//выход
