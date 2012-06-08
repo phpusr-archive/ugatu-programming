@@ -1,15 +1,8 @@
-/*
-Метод итераций
-0,25x3 + x - 1,2502 = 0
-Отрезок, содержащий корень: [0;2]
-Точное значение: 1,0001
-*/
-
 #include <iostream>
 #include <math.h>
 #include <stdio.h>
 
-typedef float(*fptr2args)(float, bool);//тип-указатель на функцию уравнения c 2 аргументами
+typedef float(*fptr)(float, bool);//тип-указатель на функцию уравнения c 2 аргументами
 
 const bool debug = false;
 
@@ -18,27 +11,64 @@ void printX(char* methodName, int count, float x, float y) {
     printf("[%s]\t Result(%d):: x=%.10f\t y=%.5f\n", methodName, count, x, y);
 }
 
-/** Метод Ньютона */
-float methodNewton(fptr2args f, float a, float b, float e) {
-    char* methodName = "Newton";
-    float x = (a + b)/2, xPrev;
-    int count = 0;
+/** Метод итераций */
+float methodIterator(fptr f, float a, float b, float e) {
+      char* methodName = "Iterator";
+      float x, xNext = b;
+      int count = 0;
+      bool exit = false;
+      do {
+          count++;
+          x = xNext;
+          xNext = fabs((*f)(x, false));
 
-    do {
-        xPrev = x;
-        count++;
-        x = xPrev - f(xPrev, false) / f(xPrev, true);
-    } while(fabs(x - xPrev) > e);
+          if (count % 10 == 0 && debug) {
+             printf("%d: x(%d)=%.5f, x(%d)=%.5f\n", count, count-1, x, count, xNext);
+          }
 
-    printX(methodName, count, x, (*f)(x, false));
+          exit = xNext < e;
+
+      } while(fabs(xNext - x) > e && !exit);
+
+      if (exit) {
+        printX(methodName, count, x, (*f)(x, true));
+        return x;
+      } else {
+        if (debug) printf("X Not found!\n");
+        printX(methodName, count, x, (*f)(x, true));
+        return x;
+      }
 }
 
-/** Функция 11 варианта */
-float var11Func(float x, bool proizvod) {
-    //Если proizvod == false тогда возвращается значение обычной функц., в другом случае - производной
-    if (!proizvod) {
+/** Метод половинного деления */
+float methodBisection(fptr f, float a, float b, float e) {
+    char* methodName = "Bisection";
+    float x;
+    int count = 0;
+    do {
+        count++;
+        x=(a+b)/2;			//находим середину отрезка
+        if ( (*f)(a, true) * (*f)(x, true) < 0 ) {		//выбираем отрезок
+           b=x;
+        } else {
+          a=x;
+        }
+        if (count % 100 == 0 && debug) printf("%d: (*f)(a)=%.5f, (*f)(a) * (*f)(x)=%.10f, a=%f, b=%f\n", count, (*f)(a, true), (*f)(a, true) * (*f)(x, true), a, b);
+    } while(fabs((*f)(x, true))>e && fabs(a-b)>e);
+
+    printX(methodName, count, x, (*f)(x, true));
+
+    return x;
+}
+
+/** Функция 10 варианта */
+float var10Func(float x, bool std) {
+    if (std) {
+        //Стандартная функция
         return 0.1 * pow(x,2) - x * log(x);
     } else {
-        return 0.2 * x - log(x) + 1;
+        //Выраженное X из функции для метода итераций
+        return pow(10*x*log(x), 0.5);
     }
+
 }

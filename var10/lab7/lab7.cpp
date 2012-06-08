@@ -10,7 +10,7 @@
 2. +Написать функцию с переменным числом параметров в соответствии с вариантом, продемонстрировать вызов функции с различным числом параметров.
 3. +Написать перегруженные функции в соответствии с вариантом. Написать демонстрационную программу для вызова этих функций.
 4. +Написать шаблон функций вместо перегруженных функций из задания 3. Написать демонстрационную программу для вызова этих функций. списка параметров
-5. Решить уравнение указанным в варианте методом. Уравнение передать в функцию как параметр с помощью указателя.
+5. +Решить уравнение указанным в варианте методом. Уравнение передать в функцию как параметр с помощью указателя.
 
 
 +Функция с умалчиваемыми параметрами
@@ -18,55 +18,53 @@
 +Перегруженные функции и шаблон функции
 +Передача функции как параметра другой функции с помощью указателя
 
-
-+Печать фамилии, имени и рейтинга
-+Среднее арифметическое элементов в списке параметров
-+Минимальный элемент в массиве
-Метод итераций
-0,25x3 + x - 1,2502 = 0
-Отрезок, содержащий корень: [0;2]
-Точное значение: 1,0001
-
 */
 
 using namespace std;
 
 /** Функция с умалчиваемыми параметрами */
-void functionDefaultParameters(int x1 = 4, int y1 = 3, int x2 = 5, int y2 = 7) {
+void functionDefaultParameters(int x1 = 5, int y1 = 5) {
     cout<<">>functionDefaultParameters"<<endl;
 
-    float dl = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+    float dl = sqrt(pow(0 - x1, 2) + pow(0 - y1, 2));
     cout<<"dl="<<dl;
 }
 
-/** Функция с переменным числом параметров, поиск минимума */
-int variableFunction(int k, ...) {
+/** Функция с переменным числом параметров, Среднее арифметическое из элементов в списке параметров, стоящих на нечетных местах */
+float variableFunction(int k, ...) {
      cout<<"Function this variable parameters"<<endl;
 
-     int min = k;
+     int count = 0, countChet = 0;
+     int sum = 0;
      int* p = &k;
      while (*p != 0) { //Цикл продолжается пока не найдется элемент = 0
-           p++;
-           if (*p < min) min = *p;
-           //cout<<"min="<<min<<endl; //для отладки
+        count++;
+        if (count % 2 == 1) {
+            countChet++;
+            sum += *p;
+            cout<<"p="<<*p<<endl;
+        }
+        p++;
      }
+     cout<<"sum="<<sum<<"; count="<<countChet<<endl;
 
-     return min;
+     return (float)sum / countChet;
 }
 
 /** Распечатка массива */
 template<class T>
 void printArray(T a[], int n) {
-  cout<<">>Print array"<<endl;
+  if (false) cout<<">>Print array"<<endl;
 
    for(int i=0; i<n; i++) {
-      cout<<a[i]<<endl;
+      cout<<a[i]<<"; ";
    }
+   cout<<endl;
 }
 
-/** Удаление элемента с заданным ключом из динамического массива для int */
+/** Удаление элемента с заданным номером из динамического массива для int */
 int* deleteRowById(int* array, int n, int id) {
-       cout<<">>Delete row by id (int)"<<endl;
+       cout<<">>Peregrujenaya func (int)"<<endl;
 
        if (n == 0) {
            cout<<"Array is empty!";
@@ -89,9 +87,9 @@ int* deleteRowById(int* array, int n, int id) {
        return a;
 }
 
-/** Удаление элемента с заданным ключом из динамического массива для float */
+/** Удаление элемента с заданным номером из динамического массива для float */
 float* deleteRowById(float* array, int n, int id) {
-       cout<<">>Delete row by id (float)"<<endl;
+       cout<<">>Peregrujenaya func (float)"<<endl;
 
        if (n == 0) {
            cout<<"Array is empty!";
@@ -116,8 +114,8 @@ float* deleteRowById(float* array, int n, int id) {
 
 /** Шаблон функции для удаления заданного элемента из массива */
 template<class T>
-T* minInArrayTemplate(T* array, int n, int id) {
-    cout<<"Template function"<<endl;
+T* deleteElTemplate(T* array, int n, int id) {
+    cout<<">>Shablon func"<<endl;
 
     if (n == 0) {
        cout<<"Array is empty!";
@@ -140,35 +138,35 @@ T* minInArrayTemplate(T* array, int n, int id) {
    return a;
 }
 
-typedef float(*fptr)(float);//тип-указатель на функцию уравнения
-typedef float(*fptr2args)(float, bool);//тип-указатель на функцию уравнения c 2 аргументами
+typedef float(*fptr)(float, bool);//тип-указатель на функцию уравнения
 
-float methodNewton(fptr2args f, float a, float b, float e); //Заголовок для функции в файле (transfer.cpp)
-float var11Func(float x, bool proizvod); //Заголовок для функции в файле (transfer.cpp)
+float methodIterator(fptr f, float a, float b, float e); //Заголовок для функции в файле (transfer.cpp)
+float methodBisection(fptr f, float a, float b, float e); //Заголовок для функции в файле (transfer.cpp)
+float var10Func(float x, bool std); //Заголовок для функции в файле (transfer.cpp)
 
 /** Главная запускаемая функция */
 int main(int argc, char *argv[]) {
     int k;
     do {
         cout<<endl<<"======================="<<endl;
-        cout<<"1. Function default parameters"<<endl;
-        cout<<"2. Function default parameters 2"<<endl;
-        cout<<"3. Function default parameters 3"<<endl;
-        cout<<"4. Function this variable parameters"<<endl;
-        cout<<"5. Overloaded & template function"<<endl;
-        cout<<"6. Transfer function"<<endl;
+        cout<<"1. Func umalch parameters"<<endl;
+        cout<<"2. Func umalch parameters 2"<<endl;
+        cout<<"3. Func umalch parameters 3"<<endl;
+        cout<<"4. Func s peremen chislom parametrov"<<endl;
+        cout<<"5. Peregrujenaya func"<<endl;
+        cout<<"6. Peredacha func kak parametra"<<endl;
         cout<<"7. Exit"<<endl;
         cout<<"======================="<<endl;
         cin>>k;
         switch (k) {
             //Запуск функц. с умалч. параметрами (все параметры указаны явно)
-            case 1: functionDefaultParameters(9,2,6,8); break;
+            case 1: functionDefaultParameters(4, 6); break;
             //Запуск функц. с умалч. параметрами (часть параметров указана явно)
-            case 2: functionDefaultParameters(4,6,2); break;
+            case 2: functionDefaultParameters(4); break;
             //Запуск функц. с умалч. параметрами (параметры не указаны)
             case 3: functionDefaultParameters(); break;
             //Запуск функц. с переменным числом параметров
-            case 4: cout<<"min: "<<variableFunction(4, 3, -12, 8, -1, 20, 0)<<endl; break;
+            case 4: cout<<"Sr: "<<variableFunction(4, 3, -12, 8, -1, 20, 0)<<endl; break;
             //Перегруженные функции и шаблон функции
             case 5: {
                  int k;
@@ -177,21 +175,29 @@ int main(int argc, char *argv[]) {
 
                  int a[] = {-11, 92, -58, 23, 91, 912};
                  int n = 6;
+                 cout<<"Nachalnii massiv:"<<endl;
+                 printArray(a, n);
+
                  deleteRowById(a, n, k-1); //Запуск перегруженной функции для int
-                 minInArrayTemplate(a, n, k-1); //Запуск шаблонной функции для int
+                 deleteElTemplate(a, n, k-1); //Запуск шаблонной функции для int
                  cout<<endl;
 
                  float f[] = {43.23, -23.1, -58.21, 34.34, -91.2, 912.3};
                  n = 6;
+                 cout<<"Nachalnii massiv:"<<endl;
+                 printArray(f, n);
+
                  deleteRowById(f, n, k-1); //Запуск перегруженной функции для float
-                 minInArrayTemplate(f, n, k-1); //Запуск шаблонной функции для float
+                 deleteElTemplate(f, n, k-1); //Запуск шаблонной функции для float
 
                  break;
             }
             //Передача функции как параметра другой функции с помощью указателя
             case 6:
-                 float res = 0;
-                 res = methodNewton(var11Func, 1, 2, 0.0001);
+                 float res = methodIterator(var10Func, 1, 2, 0.0001);
+                 cout<<"x="<<res<<endl;
+                 res = methodBisection(var10Func, 1, 2, 0.0001);
+                 cout<<"x="<<res<<endl;
                  break;
         }
     } while (k!=7);//выход
