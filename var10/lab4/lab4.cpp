@@ -31,7 +31,7 @@ void stringChange(char* s);
 
 int main(){
 
-    cout << "Var 10 Lab 3" << endl;
+    cout << "Var 10 Lab 4" << endl;
     int k;
 
     do {
