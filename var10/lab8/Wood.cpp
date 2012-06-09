@@ -6,26 +6,26 @@
 
 using namespace std;
 
-/**
+/*
 1 - сообщения об операцияях Creating, Adding
 2 - 1 и навания рекурсионные функции create*, add*
 3 - 2 и функции print*
 */
 int debugWood = 0;
 
-/** Выводит имя функци в заданном формате */
+/* Выводит имя функци в заданном формате */
 void printFunNameWood(char* name) {
     printf("[Wood] >>%s :: \n", name);
 }
 
-/** Печатает узел дерева */
+/* Печатает узел дерева */
 void printNode(Wood* wood) {
     if (debugWood > 2) printFunNameWood("Print node");
 
-    printf("id=%d\t data=%.3f\t left=%7d\t right=%7d\n", wood, wood->data, wood->left, wood->right);
+    printf("id=%d\t data=%d\t left=%7d\t right=%7d\n", wood, wood->data, wood->left, wood->right);
 }
 
-/** Создает идеальное дерево рекурсивно */
+/* Создает идеальное дерево рекурсивно */
 Wood* createIdealWoodRecourse(Wood* wood, int count) {
     if (debugWood > 1) printFunNameWood("Create ideal wood recourse");
 
@@ -37,7 +37,7 @@ Wood* createIdealWoodRecourse(Wood* wood, int count) {
     int countRight = count - countLeft - 1;
 
     wood = new Wood();
-    wood->data = rand() / 3.4;
+    wood->data = rand() % 90 + 10;
 
     if (debugWood) {
         if (debugWood > 1) printf("count=%d\t countLeft=%d\t countRight=%d\n", count, countLeft, countRight);
@@ -50,7 +50,7 @@ Wood* createIdealWoodRecourse(Wood* wood, int count) {
     return wood;
 }
 
-/** Печатает дерево рекурсивно */
+/* Печатает дерево рекурсивно */
 void printWoodRecourse(Wood* wood) {
     if (debugWood > 1) printFunNameWood("Print wood recourse");
 
@@ -68,7 +68,7 @@ Wood* createIdealWood(int count) {
 
     srand(time(0));
     Wood* wood = createIdealWoodRecourse(new Wood(), count);
-    cout<<"Wood created!";
+    cout<<"Wood created!"<<endl<<endl;
 
     return wood;
 }
@@ -78,52 +78,48 @@ void printWood(Wood* wood) {
     printFunNameWood("Print wood");
 
     if (wood == 0) {
-        cout<<"Wood is empty!";
+        cout<<"Wood is empty!"<<endl;
         return;
     }
 
     printWoodRecourse(wood);
 }
 
-/** Ищет минимум в дереве рекурсивно */
-Wood* findMinRecourse(Wood* wood, Wood* min) {
-    if (debugWood > 1) printFunNameWood("Find min recourse");
+/* Считает количество листов рекурсивно */
+int countLeafRecourse(Wood* wood, int count) {
 
-    if (!wood || !min) {
-        if (!min) cout<<"min == 0"<<endl;
-        return min;
+    //Подсчет для левой ветки
+    if (!wood->left) {
+        count++;
+    } else {
+        count = countLeafRecourse(wood->left, count);
     }
 
-    if (wood->data < min->data) {
-        min = wood;
+    //Подсчет для правой ветки
+    if (!wood->right) {
+        count++;
+    } else {
+        count = countLeafRecourse(wood->right, count);
     }
 
-    if (debugWood) {
-        cout<<"wood="; printNode(wood);
-        cout<<"min="; printNode(min);
-    }
-
-    min = findMinRecourse(wood->left, min);
-    min = findMinRecourse(wood->right, min);
-
-    return min;
+    return count;
 }
 
-/** Обработка дерева (поиск минимума) */
+/** Обработка дерева (Находит количество листьев в дереве) */
 void processingWood(Wood* wood) {
     printFunNameWood("Processing wood");
 
     if (wood == 0) {
-        cout<<"Wood is empty!";
+        cout<<"Wood is empty!"<<endl<<endl;
         return;
     }
 
-    Wood* min = findMinRecourse(wood, wood);
+    int count = countLeafRecourse(wood, 0);
 
-    cout<<"Minimum is "; printNode(min);
+    cout<<endl<<"Kolichestvo listov: "<<count<<endl<<endl;
 }
 
-/** Добавляет узел в поисковое дерево (если уже нет такого элемента) */
+/* Добавляет узел в поисковое дерево (если уже нет такого элемента) */
 Wood* addNodeToSearchWood(Wood* searchWood, Wood* el) {
     if (debugWood) printFunNameWood("Add node");
 
@@ -173,7 +169,7 @@ Wood* addNodeToSearchWood(Wood* searchWood, Wood* el) {
     return newWood;
 }
 
-/** Конвертирует идеальное дерево в (поисковое рекурсивно) */
+/* Конвертирует идеальное дерево в (поисковое рекурсивно) */
 Wood* convertIdealWoodToSearchWoodRecurse(Wood* wood, Wood* searchWood) {
     if (debugWood) printFunNameWood("Convert to Search wood recourse");
 
@@ -187,7 +183,7 @@ Wood* convertIdealWoodToSearchWoodRecurse(Wood* wood, Wood* searchWood) {
     return searchWood;
 }
 
-/** Выводит числа в виде дерева под 90гр (косячно работает) */
+/* Выводит числа в виде дерева под 90гр (косячно работает) */
 void printTree(Wood *q, int n) {
    if (q) {
       printTree(q->right, n+5);
@@ -204,7 +200,7 @@ Wood* convertIdealWoodToSearchWood(Wood* wood) {
     printFunNameWood("Convert to Search wood");
 
     if (wood == 0) {
-        cout<<"Wood is empty!";
+        cout<<"Wood is empty!"<<endl<<endl;
         return wood;
     }
 
@@ -212,7 +208,7 @@ Wood* convertIdealWoodToSearchWood(Wood* wood) {
     searchWood->data = wood->data;
     convertIdealWoodToSearchWoodRecurse(wood, searchWood);
 
-    cout<<"Wood converted to Search wood!"<<endl;
+    cout<<"Wood converted to Search wood!"<<endl<<endl;
 
     if (debugWood) printTree(searchWood, 0);
 

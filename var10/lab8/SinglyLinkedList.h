@@ -2,7 +2,7 @@
 #define SINGLYLINKEDLIST_H_INCLUDED
 
 struct Hot {
-    int data;
+    double data;
     Hot* next;
 };
 

@@ -3,7 +3,7 @@
 
 
 struct Wood {
-    double data;
+    int data;
     Wood* left;
     Wood* right;
 };

@@ -6,31 +6,31 @@
 
 using namespace std;
 
-/**
+/*
 1 - сообщения об операцияях Creating, Adding, Deleting
 2 - 1 и навания вспом функции create*, add*, del*
 3 - 2 и функции print*
 */
 int debug = 0;
 
-/** Выводит имя функци в заданном формате */
+/* Выводит имя функци в заданном формате */
 void printFunName(char* name) {
     printf(">>%s :: \n", name);
 }
 
-/** Печатает структуру */
+/* Печатает структуру */
 void printHot(int i, Hot* hot) {
     if (debug > 2) printFunName("Print Hot");
 
-    printf("%d:\t data: %d\t next: %d\n", i, hot->data, hot->next);
+    printf("%d. id:%d\t data: %.5f\t next: %d\n", i, hot, hot->data, hot->next);
 }
 
-/** Создает структуру */
+/* Создает структуру */
 Hot* createHot() {
     if (debug > 1) printFunName("Create Hot");
 
     Hot* hot = new Hot();
-    hot->data = rand() % 100;
+    hot->data = (float)(rand() % 100) / (rand() % 10);
     hot->next = 0;
     if (debug) {
         cout<<"Creating:\t";
@@ -40,7 +40,7 @@ Hot* createHot() {
     return hot;
 }
 
-/** Добавляет структуру в список */
+/* Добавляет структуру в список */
 Hot* addHot(Hot* beg, Hot* hot, int pos) {
     if (debug > 1) printFunName("Add Hot");
 
@@ -78,22 +78,19 @@ Hot* addHot(Hot* beg, Hot* hot, int pos) {
     return beg;
 }
 
-/** Создает список */
+/* Создает список */
 Hot* createList(int n) {
     printFunName("Create List");
 
     Hot* beg;
     beg = createHot();
-    /*beg = new Hot();
-    beg->data = 777;
-    beg->next = 0;*/
 
     srand(time(0));
     for(int i=0;i<n-1;i++) {
         addHot(beg, createHot(), i+1);
     }
 
-    cout<<"List creating!"<<endl;
+    cout<<"List creating!"<<endl<<endl;
 
     return beg;
 }
@@ -156,35 +153,31 @@ Hot* delHot(Hot* beg, int pos) {
     return beg;
 }
 
-/** Обработка списка (находит первый четный элемент и удаляет) */
+/** Обработка списка (Удаляет из списка все элементы с четными номерами (0, 2, 4, 6 и. т. д.) */
 Hot* processingList(Hot* beg) {
     printFunName("Processing List");
 
     if (beg == 0) {
-        cout<<"List is empty!"<<endl;
+        cout<<"List is empty!"<<endl<<endl;
         return beg;
     }
 
     Hot *cur = beg, *hot;
-    int count = 0, index = 0;
-    bool find = false;
-    while (cur !=0 && !find) {
-        if (cur->data % 2 == 0) {
-            find = true;
-            index = count;
+    int count = 0, i = 0;
+    while (cur !=0) {
+        i++;
+        if (i % 2 == 1) {
             hot = cur;
+            cur = cur->next;
+            cout<<"Deleting: ";
+            printHot(count, hot);
+            beg = delHot(beg, count);
+        } else {
+            cur = cur->next;
+            count++;
         }
-        cur = cur->next;
-        count++;
     }
-
-    if (find) {
-        cout<<"Deleting: ";
-        printHot(index, hot);
-        beg = delHot(beg, index);
-    } else {
-        cout<<"Element not found!";
-    }
+    cout<<endl;
 
     return beg;
 }
@@ -194,7 +187,7 @@ Hot* delList(Hot* beg) {
     printFunName("Delete List");
 
     if (beg == 0) {
-        cout<<"List is empty!"<<endl;
+        cout<<"List is empty!"<<endl<<endl;
         return beg;
     }
 
@@ -211,7 +204,7 @@ Hot* delList(Hot* beg) {
         count++;
     }
 
-    cout<<"List deleting!";
+    cout<<"List deleting!"<<endl<<endl;
 
     return beg;
 }

@@ -2,30 +2,31 @@
 #include <stdio.h>
 #include <ctime>
 #include <cstdlib>
+#include <string.h>
 #include "DoubleLinkedList.h"
 
 using namespace std;
 
-/**
+/*
 1 - сообщения об операцияях Creating, Adding, Deleting
 2 - 1 и навания вспом функции create*, add*, del*
 3 - 2 и функции print*
 */
 int debugDouble = 0;
 
-/** Выводит имя функци в заданном формате */
+/* Выводит имя функци в заданном формате */
 void printFunNameDouble(char* name) {
     printf("[DoubleLinkedList] >>%s :: \n", name);
 }
 
-/** Печатает структуру */
+/* Печатает структуру */
 void printDub(int i, Dub* dub) {
     if (debugDouble > 2) printFunNameDouble("Print Dub");
 
     printf("%d: id: %d\t data: %s\t prev: %d\t next: %d\n", i, dub, dub->data, dub->prev, dub->next);
 }
 
-/** Создает структуру */
+/* Создает структуру (инф. поле передается как параметр) */
 Dub* createDub(char* data) {
     if (debugDouble > 1) printFunNameDouble("Create Dub");
     if (debugDouble > 1) cout<<"data="<<data<<endl;
@@ -42,14 +43,14 @@ Dub* createDub(char* data) {
     return dub;
 }
 
-/** Создает структуру */
+/* Создает структуру (инф. поле генерируется) */
 Dub* createDub() {
     char* data = new char[20];
     sprintf(data, "data_%d", rand() % 100);
     return createDub(data);
 }
 
-/** Добавляет структуру в список */
+/* Добавляет структуру в список */
 Dub* addDub(Dub* beg, Dub* dub, int pos) {
     if (debugDouble > 1) printFunNameDouble("Add Dub");
 
@@ -96,6 +97,44 @@ Dub* addDub(Dub* beg, Dub* dub, int pos) {
     return beg;
 }
 
+/* Добавляет структуру в список после заданного информац. поля */
+Dub* addDub(Dub* beg, Dub* dub, char* s) {
+    if (debugDouble > 1) printFunNameDouble("Add Dub");
+
+    if (beg == 0) {
+        cout<<"List is empty!"<<endl;
+        delete dub;
+        return beg;
+    }
+
+    Dub* cur = beg;
+    int i = 0;
+    bool find = false;
+    while (cur != 0 && !find) {
+        if (strcmp(cur->data, s) == 0) {
+            find = true;
+            dub->prev = cur;
+            dub->next = cur->next;
+
+            if (cur->next != 0) cur->next->prev = dub;
+            cur->next = dub;
+            if (debugDouble) {
+                cout<<"Adding:\t\t";
+                printDub(i+1, dub);
+            }
+        } else {
+            cur = cur->next;
+        }
+        i++;
+    }
+
+    if (!find) {
+        cout<<">>Tekst: \""<<s<<"\" ne naiden!"<<endl<<endl;
+    }
+
+    return beg;
+}
+
 /** Создает список */
 Dub* createListDouble(int n) {
     printFunNameDouble("Create List");
@@ -108,7 +147,7 @@ Dub* createListDouble(int n) {
         addDub(beg, createDub(), i+1);
     }
 
-    cout<<"List creating!"<<endl;
+    cout<<"List creating!"<<endl<<endl;
 
     return beg;
 }
@@ -131,24 +170,24 @@ void printListDouble(Dub* beg) {
     }
 }
 
-/** Обработка списка (вставляет структуру в заданную позицю в список) */
+/** Обработка списка (вставляет структуру после элемента с заданным информационным полем) */
 Dub* processingListDouble(Dub* beg, Dub* dub) {
     printFunNameDouble("Processing List");
 
-    int pos;
-    cout<<"Enter position for insert: ";
-
-    cin>>pos;
-    if (pos < 0) {
-        cout<<"Wrong position!"<<endl;
-        // TODO (phpusr#1#): Добавить проверку на не число
-        delete dub;
+    if (beg == 0) {
+        cout<<"List is empty!"<<endl<<endl;
         return beg;
     }
 
-    cout<<"Insert: "; printDub(pos, dub);
+    char s[100];
+    cout<<"Vvedite informat. pole: ";
 
-    return addDub(beg, dub, pos);
+    fflush(stdin);
+    gets(s);
+
+    cout<<"Insert: "; printDub(0, dub); cout<<endl;
+
+    return addDub(beg, dub, s);
 }
 
 /** Удаляет список */
@@ -156,7 +195,7 @@ Dub* delListDouble(Dub* beg) {
     printFunNameDouble("Delete List");
 
     if (beg == 0) {
-        cout<<"List is empty!"<<endl;
+        cout<<"List is empty!"<<endl<<endl;
         return beg;
     }
 
@@ -173,7 +212,7 @@ Dub* delListDouble(Dub* beg) {
         count++;
     }
 
-    cout<<"List deleting!";
+    cout<<"List deleting!"<<endl<<endl;
 
     return beg;
 }
