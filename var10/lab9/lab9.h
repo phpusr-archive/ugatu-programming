@@ -1,14 +1,14 @@
 #ifndef LAB9_H_INCLUDED
 #define LAB9_H_INCLUDED
 
-struct DVD {
+struct Inf {
+    char media[100];
+    float volume;
     char name[100];
-    char director[100];
-    float duration;
-    float price;
+    char author[100];
 };
 
-void printStructure(int num, DVD* struc);
-DVD* getDVDList(int count, char* name);
+void printStructure(int num, Inf* struc);
+Inf* getInfList(int count, char* name);
 
 #endif // LAB9_H_INCLUDED

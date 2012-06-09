@@ -9,31 +9,30 @@
 
 using namespace std;
 
-bool isClearScreen = true;
+bool isCS = true;
 
-// TODO (phpusr#1#): Влияет только на вывод структуры
 int debug = 2;
 
 /** Выводит структуру */
-void printStructure(int num, DVD* struc) {
+void printStructure(int num, Inf* struc) {
     if (debug > 2) printFuncName("Print structure");
 
-    printf("id:%d movie name: %s  director: %s\t duration: %.2f  price: %.2f\t\n", num, struc->name, struc->director, struc->duration, struc->price);
+    printf("id:%d Inf:: media: %s\  volume: %.2f  name: %s author: %s\n", num, struc->media, struc->volume, struc->name, struc->author);
 }
 
 /** Возвращает список структур */
-DVD* getDVDList(int count, char* name) {
-    if (debug) printFuncName("Get DVD list");
+Inf* getInfList(int count, char* name) {
+    if (debug) printFuncName("Get Inf list");
 
     int SIZE_MESSAGE = 100;
     srand(time(0));
-    DVD* list = new DVD[count];
+    Inf* list = new Inf[count];
 
     for(int i=0; i<count; i++) {
-        sprintf(list[i].name, "%s_%d", name, rand() % 98 + 1);
-        sprintf(list[i].director, "Dir_%d", rand() % 200);
-        list[i].duration = rand() % 199 + 100;
-        list[i].price = rand() % 100 + 1;
+        sprintf(list[i].media, "disk_%d", rand() % 90 + 10);
+        list[i].volume = (float)(rand() % 100) / 10;
+        sprintf(list[i].name, "%s_%d", name, rand() % 90 + 10);
+        sprintf(list[i].author, "Semen_%d", rand() % 200);
 
         if (debug > 1) {
             info(">>Generate:");
@@ -47,7 +46,7 @@ DVD* getDVDList(int count, char* name) {
 //////////////////////////////////////
 int printMenu() {
     int i = 0;
-    clrscr(isClearScreen);
+    clrscr(isCS);
     printMenuHeader("Stream Input Output C");
     printMenuItem(++i, "Create file");
     printMenuItem(++i, "Print file");
@@ -70,6 +69,7 @@ int main() {
     int k = -1, countMenuItem;
     char* fileName = "data.txt";
     char* fileName2 = "data2.txt";
+    char* name = "Kniga";
 
     cout<<"Lab 9"<<endl;
     cout<<"Debug Level: "<<debug<<endl;
@@ -81,16 +81,16 @@ int main() {
 
         cin>>k;
         switch (k) {
-            case 0: clrscr(isClearScreen); printMenu(); break;
-            case 1: clrscr(isClearScreen); createAndPutFile(fileName, count); break;
-            case 2: clrscr(isClearScreen); printFile(fileName); break;
-            case 3: clrscr(isClearScreen); deleteElements(fileName); break;
-            case 4: clrscr(isClearScreen); insertElements(fileName); break;
+            case 0: clrscr(isCS); printMenu(); break;
+            case 1: clrscr(isCS); createAndPutFile(fileName, count, name); break;
+            case 2: clrscr(isCS); printFile(fileName); break;
+            case 3: clrscr(isCS); deleteElements(fileName); break;
+            case 4: clrscr(isCS); insertElements(fileName); break;
 
-            case 5: clrscr(isClearScreen); createAndPutFileCPP(fileName2, count); break;
-            case 6: clrscr(isClearScreen); printFileCPP(fileName2); break;
-            case 7: clrscr(isClearScreen); deleteElementsCPP(fileName2); break;
-            case 8: clrscr(isClearScreen); insertElementsCPP(fileName2); break;
+            case 5: clrscr(isCS); createAndPutFileCPP(fileName2, count); break;
+            case 6: clrscr(isCS); printFileCPP(fileName2); break;
+            case 7: clrscr(isCS); deleteElementsCPP(fileName2); break;
+            case 8: clrscr(isCS); insertElementsCPP(fileName2); break;
         }
     } while (k != countMenuItem);
 }

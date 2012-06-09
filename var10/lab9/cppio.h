@@ -2,7 +2,7 @@
 #define CPPIO_H_INCLUDED
 #include "lab9.h"
 
-void putFileCPP(char* fileName, DVD* list, int count);
+void putFileCPP(char* fileName, Inf* list, int count);
 void printFileCPP(char* fileName);
 void createAndPutFileCPP(char* fileName, int count);
 void deleteElementsCPP(char* fileName);

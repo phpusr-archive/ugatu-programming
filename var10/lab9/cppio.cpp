@@ -11,17 +11,17 @@ using namespace std;
 int debugCPP = 0;
 
 
-/** Заполняет файл из списка */
-void putFileCPP(char* fileName, DVD* list, int count) {
+/* Заполняет файл из списка */
+void putFileCPP(char* fileName, Inf* list, int count) {
     if (debugCPP) printFuncName("Put to file");
 
     fstream fp(fileName, ios::out);
 
     for (int i=0; i<count; i++) {
+        fp<<list[i].media<<endl;
+        fp<<list[i].volume<<endl;
         fp<<list[i].name<<endl;
-        fp<<list[i].director<<endl;
-        fp<<list[i].duration<<endl;
-        fp<<list[i].price<<endl;
+        fp<<list[i].author<<endl;
         if (debugCPP) {
             info("Adding:");
             printStructure(i, &list[i]);
@@ -37,13 +37,13 @@ void printFileCPP(char* fileName) {
 
     fstream fp(fileName, ios::in);
 
-    DVD bufer;
+    Inf bufer;
     int count = 0;
     while (!fp.eof()) {
+        fp>>bufer.media;
+        fp>>bufer.volume;
         fp>>bufer.name;
-        fp>>bufer.director;
-        fp>>bufer.duration;
-        fp>>bufer.price;
+        fp>>bufer.author;
         if (fp.eof()) break;
         printStructure(count, &bufer);
         count++;
@@ -56,21 +56,21 @@ void printFileCPP(char* fileName) {
 void createAndPutFileCPP(char* fileName, int count) {
     printFuncName("Create and put file");
 
-    putFileCPP(fileName, getDVDList(count, "Ivan"), count);
+    putFileCPP(fileName, getInfList(count, "Ivan"), count);
 
     info("File created and formed");
 }
 
-/** Удаляет диски из файла, с ценой выше заданной */
+/** Удаляет первый элемент с ценой выше заданной */
 void deleteElementsCPP(char* fileName) {
     printFuncName("Delete elements");
 
-    int price;
-    cout<<"Enter price: ";
-    cin>>price;
+    float volume;
+    cout<<"Enter volume: ";
+    cin>>volume;
 
-    if (price <= 0 || price > 1000) {
-        warn("Wrong price");
+    if (volume <= 0 || volume > 10000) {
+        warn("Wrong volume");
         return;
     }
 
@@ -79,24 +79,24 @@ void deleteElementsCPP(char* fileName) {
     fstream tmp(nameTmpFile, ios::out);
     bool isDel = false;
 
-    DVD bufer;
+    Inf bufer;
     int count = 0;
     while (!fp.eof()) {
+        fp>>bufer.media;
+        fp>>bufer.volume;
         fp>>bufer.name;
-        fp>>bufer.director;
-        fp>>bufer.duration;
-        fp>>bufer.price;
+        fp>>bufer.author;
         if (fp.eof()) break;
 
-        if (bufer.price <= price) {
-            tmp<<bufer.name<<endl;
-            tmp<<bufer.director<<endl;
-            tmp<<bufer.duration<<endl;
-            tmp<<bufer.price<<endl;
-        } else {
+        if (bufer.volume == volume && !isDel) {
             isDel = true;
             info("Deleting: ");
             printStructure(count, &bufer);
+        } else {
+            tmp<<bufer.media<<endl;
+            tmp<<bufer.volume<<endl;
+            tmp<<bufer.name<<endl;
+            tmp<<bufer.author<<endl;
         }
         count++;
     }
@@ -111,70 +111,34 @@ void deleteElementsCPP(char* fileName) {
     }
 }
 
-/** Вставляет элементы в указанную позицию */
+/** Добавляет K элементов в конец файла */
 void insertElementsCPP(char* fileName) {
     printFuncName("Insert elements");
 
-    int n = 1; //Количество вставляемых элементов
-    int k; //Позиция для вставки
+    int k; //Количество вставляемых элементов
 
     cout<<"Enter k: ";
     cin>>k;
-    if (k < 0 || k > 100) {
+    if (k <= 0 || k > 100) {
         warn("Wrong k");
         return;
     }
 
-    DVD* list = getDVDList(n, "INSERT");
+    Inf* list = getInfList(k, "INSERT");
 
-    char* nameTmpFile = "tmp.txt";
-    fstream fp(fileName, ios::in);
-    fstream tmp(nameTmpFile, ios::out);
-    int count = 0, curCount = 0;
-    bool isFindPos = false, eof = false;
+    ofstream fp(fileName, ios::app);
 
-    DVD bufer;
-    while (curCount <= k || !eof) {
-        if (curCount == k && curCount <= count) {
-            isFindPos = true;
-            for (int i=0; i<n; i++) {
-                tmp<<list[i].name<<endl;
-                tmp<<list[i].director<<endl;
-                tmp<<list[i].duration<<endl;
-                tmp<<list[i].price<<endl;
-                if (debugCPP) {
-                    info("Adding:");
-                    printStructure(curCount + i, &list[i]);
-                }
-            }
+    Inf bufer;
+    for(int i=0; i<k; i++) {
+        fp<<list[i].media<<endl;
+        fp<<list[i].volume<<endl;
+        fp<<list[i].name<<endl;
+        fp<<list[i].author<<endl;
+        if (debugCPP) {
+            info("Adding:");
+            printStructure(i, &list[i]);
         }
-
-        if (!fp.eof()) {
-
-            fp>>bufer.name;
-            fp>>bufer.director;
-            fp>>bufer.duration;
-            fp>>bufer.price;
-
-            if (!fp.eof()) {
-                tmp<<bufer.name<<endl;
-                tmp<<bufer.director<<endl;
-                tmp<<bufer.duration<<endl;
-                tmp<<bufer.price<<endl;
-                count++;
-            }
-        } else {
-            eof = true;
-        }
-        curCount++;
     }
 
     fp.close();
-    tmp.close();
-    remove(fileName);
-    rename(nameTmpFile, fileName);
-
-    if (!isFindPos) {
-        warn("Wrong k");
-    }
 }
