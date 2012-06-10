@@ -16,3 +16,5 @@ obj/*
 
 /lab9/data.txt
 /lab9/data2.txt
+
+releases/*.zip
