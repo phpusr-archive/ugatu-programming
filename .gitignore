@@ -14,6 +14,5 @@ obj/*
 .objs/*
 *.depend
 
-
 /lab9/data.txt
 /lab9/data2.txt
